@@ -6,8 +6,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
-from src.components.shape import CubeWidget
+from src.components.shape import ShapeWidget
 from src.components.ui import OptionBox
+from src.components.ui.option_controller import ShapeController
 
 
 class FloatingWindow(QMainWindow):
@@ -25,17 +26,21 @@ class FloatingWindow(QMainWindow):
         ### Layout setting
         layout = QHBoxLayout(container)
         layout.setContentsMargins(0, 0, 0, 0)
+        self.setCentralWidget(container)
 
-        ### Initialize elements
-        self.cube = CubeWidget()
+        ### Shape
+        self.shape_widget = ShapeWidget()
+        layout.addWidget(self.shape_widget, 1)
+
+        ### Option
         self.option_ui = OptionBox()
-
-        ### Add elements to layout
-        layout.addWidget(self.cube, 1)
         layout.addWidget(self.option_ui, 0)
 
+        ### Shape Controller
+        self.shape_controller = ShapeController(self.shape_widget)
+        self.option_ui.shapeSelected.connect(self.shape_controller.switch_shape)
+
         ### Popup setting
-        self.setCentralWidget(container)
         self.resize(400, 300)
 
     ### Detect keyboard press to end application

@@ -4,10 +4,12 @@ from PySide6.QtWidgets import (
     QPushButton,
 )
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 
 
 class OptionBox(QOpenGLWidget):
+    shapeSelected = Signal(str)
+
     def __init__(self):
         super().__init__()
 
@@ -16,12 +18,17 @@ class OptionBox(QOpenGLWidget):
         self.setAttribute(Qt.WA_TranslucentBackground)
 
         layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignRight)
         label = QLabel("Shape Controls")
         label.setStyleSheet("color: white; font-size: 14px;")
 
-        btn_cube = QPushButton("Show Cube")
+        self.btn_cube = QPushButton("Show Cube")
+        self.btn_cube.clicked.connect(lambda: self.shapeSelected.emit("cube"))
 
-        for btn in [btn_cube]:
+        self.btn_sphere = QPushButton("Show Sphere")
+        self.btn_sphere.clicked.connect(lambda: self.shapeSelected.emit("sphere"))
+
+        for btn in [self.btn_cube, self.btn_sphere]:
             btn.setStyleSheet(
                 """
               QPushButton {
@@ -37,7 +44,8 @@ class OptionBox(QOpenGLWidget):
             )
 
         layout.addWidget(label)
-        layout.addWidget(btn_cube)
+        layout.addWidget(self.btn_cube)
+        layout.addWidget(self.btn_sphere)
         self.setLayout(layout)
 
         self.resize(140, 100)
