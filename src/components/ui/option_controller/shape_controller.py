@@ -1,3 +1,5 @@
+import random
+
 from src.components.shape import CubeWidget, ShapeWidget, SphereWidget
 
 
@@ -14,3 +16,12 @@ class ShapeController:
             print("Switched to:", selected_shape)
         else:
             print(selected_shape.capitalize(), " does not exist.")
+
+    def random_color(self):
+        r = random.random()
+        g = random.random()
+        b = random.random()
+
+        self.shape_widget.color = (r, g, b)
+        # self.shape_widget.update()
+        print(f"Shape color changed to RGB ({r}, {g}, {b}).")

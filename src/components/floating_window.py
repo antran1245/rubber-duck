@@ -39,6 +39,7 @@ class FloatingWindow(QMainWindow):
         ### Shape Controller
         self.shape_controller = ShapeController(self.shape_widget)
         self.option_ui.shapeSelected.connect(self.shape_controller.switch_shape)
+        self.option_ui.randomColor.connect(self.shape_controller.random_color)
 
         ### Popup setting
         self.resize(400, 300)

@@ -9,6 +9,7 @@ from PySide6.QtCore import Qt, Signal
 
 class OptionBox(QOpenGLWidget):
     shapeSelected = Signal(str)
+    randomColor = Signal()
 
     def __init__(self):
         super().__init__()
@@ -22,13 +23,17 @@ class OptionBox(QOpenGLWidget):
         label = QLabel("Shape Controls")
         label.setStyleSheet("color: white; font-size: 14px;")
 
+        # Show Cube
         self.btn_cube = QPushButton("Show Cube")
         self.btn_cube.clicked.connect(lambda: self.shapeSelected.emit("cube"))
-
+        # Show Sphere
         self.btn_sphere = QPushButton("Show Sphere")
         self.btn_sphere.clicked.connect(lambda: self.shapeSelected.emit("sphere"))
+        # Random Color
+        self.btn_random_color = QPushButton("Random Color")
+        self.btn_random_color.clicked.connect(lambda: self.randomColor.emit())
 
-        for btn in [self.btn_cube, self.btn_sphere]:
+        for btn in [self.btn_cube, self.btn_sphere, self.btn_random_color]:
             btn.setStyleSheet(
                 """
               QPushButton {
@@ -46,6 +51,7 @@ class OptionBox(QOpenGLWidget):
         layout.addWidget(label)
         layout.addWidget(self.btn_cube)
         layout.addWidget(self.btn_sphere)
+        layout.addWidget(self.btn_random_color)
         self.setLayout(layout)
 
         self.resize(140, 100)
