@@ -41,6 +41,8 @@ class FloatingWindow(QMainWindow):
         self.option_ui.shapeSelected.connect(self.shape_controller.switch_shape)
         self.option_ui.randomColor.connect(self.shape_controller.random_color)
 
+        self.option_ui.quitApplication.connect(self.close_application)
+
         ### Popup setting
         self.resize(400, 300)
 
@@ -48,3 +50,6 @@ class FloatingWindow(QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             QApplication.quit()
+
+    def close_application(self):
+        QApplication.quit()

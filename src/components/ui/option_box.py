@@ -10,6 +10,7 @@ from PySide6.QtCore import Qt, Signal
 class OptionBox(QOpenGLWidget):
     shapeSelected = Signal(str)
     randomColor = Signal()
+    quitApplication = Signal()
 
     def __init__(self):
         super().__init__()
@@ -32,8 +33,16 @@ class OptionBox(QOpenGLWidget):
         # Random Color
         self.btn_random_color = QPushButton("Random Color")
         self.btn_random_color.clicked.connect(lambda: self.randomColor.emit())
+        # Quit Application
+        self.btn_quit_application = QPushButton("Quit Application")
+        self.btn_quit_application.clicked.connect(lambda: self.quitApplication.emit())
 
-        for btn in [self.btn_cube, self.btn_sphere, self.btn_random_color]:
+        for btn in [
+            self.btn_cube,
+            self.btn_sphere,
+            self.btn_random_color,
+            self.btn_quit_application,
+        ]:
             btn.setStyleSheet(
                 """
               QPushButton {
@@ -48,10 +57,13 @@ class OptionBox(QOpenGLWidget):
           """
             )
 
-        layout.addWidget(label)
-        layout.addWidget(self.btn_cube)
-        layout.addWidget(self.btn_sphere)
+        for element in [label, self.btn_cube, self.btn_sphere]:
+            layout.addWidget(element)
+        # layout.addWidget(label)
+        # layout.addWidget(self.btn_cube)
+        # layout.addWidget(self.btn_sphere)
         layout.addWidget(self.btn_random_color)
+        layout.addWidget(self.btn_quit_application)
         self.setLayout(layout)
 
         self.resize(140, 100)
