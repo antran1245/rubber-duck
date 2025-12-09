@@ -2,12 +2,14 @@ from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QHBoxLayout,
+    QVBoxLayout,
     QWidget,
+    QStackedLayout,
 )
 from PySide6.QtCore import Qt, QEvent
 
 from src.components.shape import ShapeWidget
-from src.components.ui import OptionBox
+from src.components.ui import OptionBox, TextBubble
 from src.components.ui.option_controller import ShapeController
 
 
@@ -28,14 +30,30 @@ class FloatingWindow(QMainWindow):
         layout.setContentsMargins(0, 0, 0, 0)
         self.setCentralWidget(container)
 
+        ### Stack container
+        self.stack_container = QWidget()
+        stack_layout = QStackedLayout(self.stack_container)
+        stack_layout.setStackingMode(QStackedLayout.StackAll)
+        layout.addWidget(self.stack_container)
+
         ### Shape
         self.shape_widget = ShapeWidget()
         self.shape_widget.installEventFilter(self)
-        layout.addWidget(self.shape_widget, 1)
+        stack_layout.addWidget(self.shape_widget)
+        ### Textbox
+        self.text_bubble = TextBubble()
+        ### Textbox container
+        textbox_container = QWidget()
+        textbox_layout = QVBoxLayout()
+        textbox_container.setLayout(textbox_layout)
+        textbox_layout.addStretch()  # Move the textbox to the bottom of the application
+        textbox_layout.addWidget(self.text_bubble)
+        stack_layout.addWidget(textbox_container)
+        textbox_container.raise_()  # Always on top of the stack
 
         ### Option
         self.option_ui = OptionBox()
-        layout.addWidget(self.option_ui, 0)
+        layout.addWidget(self.option_ui)
 
         ### Shape Controller
         self.shape_controller = ShapeController(self.shape_widget)
