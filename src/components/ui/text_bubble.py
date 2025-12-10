@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget
-from PySide6.QtGui import QPainter, QColor, QPen, QBrush, QPolygon
-from PySide6.QtCore import QPoint, Qt
+from PySide6.QtGui import QPainter, QColor, QPen, QBrush
+from PySide6.QtCore import Qt
 
 
 class TextBubble(QWidget):
@@ -26,3 +26,7 @@ class TextBubble(QWidget):
         painter.drawText(
             bubble_rect.adjusted(15, 15, -15, -15), Qt.TextWordWrap, self.text
         )
+
+    def update_text(self, new_text):
+        self.text = new_text
+        self.update()

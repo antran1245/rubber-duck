@@ -23,7 +23,7 @@ class FloatingWindow(QMainWindow):
         ### Make the application transparent.
         self.setAttribute(Qt.WA_TranslucentBackground)
 
-        ### Container for the whole application
+        ### Main container for the whole application
         container = QWidget()
         ### Layout setting
         layout = QHBoxLayout(container)
@@ -40,6 +40,7 @@ class FloatingWindow(QMainWindow):
         self.shape_widget = ShapeWidget()
         self.shape_widget.installEventFilter(self)
         stack_layout.addWidget(self.shape_widget)
+
         ### Textbox
         self.text_bubble = TextBubble()
         ### Textbox container
@@ -57,8 +58,14 @@ class FloatingWindow(QMainWindow):
 
         ### Shape Controller
         self.shape_controller = ShapeController(self.shape_widget)
-        self.option_ui.shapeSelected.connect(self.shape_controller.switch_shape)
-        self.option_ui.randomColor.connect(self.shape_controller.random_color)
+        self.option_ui.shapeSelected.connect(
+            lambda selected_shape: self.handle_shape_controller(
+                "switch_shape", selected_shape
+            )
+        )
+        self.option_ui.randomColor.connect(
+            lambda: self.handle_shape_controller("random_color")
+        )
 
         self.option_ui.quitApplication.connect(self.close_application)
 
@@ -78,6 +85,7 @@ class FloatingWindow(QMainWindow):
     def close_application(self):
         QApplication.quit()
 
+    ### Drag and Drop event
     def eventFilter(self, watched, event):
         if watched is self.shape_widget:
             if event.type() == QEvent.Enter:
@@ -98,3 +106,11 @@ class FloatingWindow(QMainWindow):
 
     def mouseReleaseEvent(self, event):
         self.drag_pos = None
+
+    ### Handle shape controller
+    def handle_shape_controller(self, action, value=""):
+        if action == "switch_shape":
+            respond = self.shape_controller.switch_shape(value)
+        elif action == "random_color":
+            respond = self.shape_controller.random_color()
+        self.text_bubble.update_text(respond)
