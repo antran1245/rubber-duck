@@ -6,11 +6,12 @@ from PySide6.QtWidgets import (
     QWidget,
     QStackedLayout,
 )
-from PySide6.QtCore import Qt, QEvent
+from PySide6.QtCore import Qt, QEvent, QThread
 
 from src.components.shape import ShapeWidget
 from src.components.ui import OptionBox, TextBubble
 from src.components.ui.option_controller import ShapeController
+from src.speech.detect_talk import DetectTalk
 
 
 class FloatingWindow(QMainWindow):
@@ -38,7 +39,7 @@ class FloatingWindow(QMainWindow):
 
         ### Shape
         self.shape_widget = ShapeWidget()
-        self.shape_widget.installEventFilter(self)
+        self.stack_container.installEventFilter(self)
         stack_layout.addWidget(self.shape_widget)
 
         ### Textbox
@@ -69,6 +70,16 @@ class FloatingWindow(QMainWindow):
 
         self.option_ui.quitApplication.connect(self.close_application)
 
+        ### Voice
+        self.voice_thread = QThread()
+        self.voice = DetectTalk()
+        self.voice.moveToThread(self.voice_thread)
+        self.voice_thread.started.connect(self.voice.start)
+        self.voice.speechStarted.connect(self.onSpeechStart)
+        self.voice.speechEnded.connect(self.onSpeechEnd)
+
+        self.voice_thread.start()
+
         ### Drag and Drop model
         self.drag_pos = None
         self.drag_enabled = False
@@ -79,15 +90,17 @@ class FloatingWindow(QMainWindow):
     ### Detect keyboard press to end application
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
+            self.closeVoiceThread
             QApplication.quit()
 
     ### Quit/Stop application
     def close_application(self):
+        self.closeVoiceThread
         QApplication.quit()
 
     ### Drag and Drop event
     def eventFilter(self, watched, event):
-        if watched is self.shape_widget:
+        if watched is self.stack_container:
             if event.type() == QEvent.Enter:
                 self.drag_enabled = True
             elif event.type() == QEvent.Leave:
@@ -114,3 +127,16 @@ class FloatingWindow(QMainWindow):
         elif action == "random_color":
             respond = self.shape_controller.random_color()
         self.text_bubble.update_text(respond)
+
+    ### Speech Events
+    def onSpeechStart(self):
+        print("User is speaking.")
+
+    def onSpeechEnd(self):
+        print("User is done speaking.")
+
+    def closeVoiceThread(self, event):
+        if hasattr(self, "voice_thread"):
+            self.voice_thread.stop()
+            self.voice_thread.wait()
+        event.accept()
