@@ -24,20 +24,26 @@ class DetectTalk(QObject):
 
         self.is_speaking = False
         self.last_sound_time = None
-        print(sd.query_devices())
+        self.running = False
+        # print(sd.query_devices()) ### Printing out all microphones
 
     def start(self):
+        self.running = True
         self.stream = sd.InputStream(
             samplerate=self.sample_rate, channels=1, callback=self.audio_callback
         )
         self.stream.start()
 
     def stop(self):
+        self.running = False
         if self.stream:
             self.stream.stop()
             self.stream.close()
+            self.stream = None
 
     def audio_callback(self, indata, frames, time_info, status):
+        if not self.running:
+            return
         volume = np.linalg.norm(indata) / frames
         now = time.time()
         if volume > self.silence_threshold:

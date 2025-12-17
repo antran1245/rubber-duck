@@ -92,12 +92,12 @@ class FloatingWindow(QMainWindow):
     ### Detect keyboard press to end application
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
-            self.closeVoiceThread
+            self.closeVoiceThread()
             QApplication.quit()
 
     ### Quit/Stop application
     def close_application(self):
-        self.closeVoiceThread
+        self.closeVoiceThread()
         QApplication.quit()
 
     ### Drag and Drop event
@@ -145,9 +145,7 @@ class FloatingWindow(QMainWindow):
         index = random.randint(0, len(default_responses) - 1)
         self.text_bubble.update_text(default_responses[index])
 
-    def closeVoiceThread(self, event):
+    def closeVoiceThread(self):
         if hasattr(self, "voice_thread"):
-            self.voice_thread.stop()
             self.voice_thread.quit()
             self.voice_thread.wait()
-        event.accept()
