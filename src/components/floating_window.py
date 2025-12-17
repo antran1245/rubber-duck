@@ -1,3 +1,5 @@
+import random
+
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -123,20 +125,29 @@ class FloatingWindow(QMainWindow):
     ### Handle shape controller
     def handle_shape_controller(self, action, value=""):
         if action == "switch_shape":
-            respond = self.shape_controller.switch_shape(value)
+            self.shape_controller.switch_shape(value)
         elif action == "random_color":
-            respond = self.shape_controller.random_color()
-        self.text_bubble.update_text(respond)
+            self.shape_controller.random_color()
 
     ### Speech Events
     def onSpeechStart(self):
         print("User is speaking.")
 
     def onSpeechEnd(self):
-        print("User is done speaking.")
+        default_responses = [
+            "Uh huh",
+            "That makes sense",
+            "Hmm",
+            "Hmmm",
+            "Yeah",
+            "Right",
+        ]
+        index = random.randint(0, len(default_responses) - 1)
+        self.text_bubble.update_text(default_responses[index])
 
     def closeVoiceThread(self, event):
         if hasattr(self, "voice_thread"):
             self.voice_thread.stop()
+            self.voice_thread.quit()
             self.voice_thread.wait()
         event.accept()
