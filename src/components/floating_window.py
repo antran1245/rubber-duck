@@ -1,5 +1,3 @@
-import random
-
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -17,7 +15,7 @@ from src.speech.detect_talk import DetectTalk
 
 
 class FloatingWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, audio_files_list=[]):
         super().__init__()
 
         ### Remove popup box and the close (X) and minimize (-) icons
@@ -71,16 +69,16 @@ class FloatingWindow(QMainWindow):
         )
 
         self.option_ui.quitApplication.connect(self.close_application)
-
         ### Voice
         self.voice_thread = QThread()
-        self.voice = DetectTalk()
+        self.voice = DetectTalk(audio_files_list=audio_files_list)
         self.voice.moveToThread(self.voice_thread)
         self.voice_thread.started.connect(self.voice.start)
-        self.voice.speechStarted.connect(self.onSpeechStart)
-        self.voice.speechEnded.connect(self.onSpeechEnd)
+        self.voice.speechEnded.connect(self.text_bubble.update_text)
 
         self.voice_thread.start()
+        ### Response Audio list
+        self.audio_files_list = audio_files_list
 
         ### Drag and Drop model
         self.drag_pos = None
@@ -129,22 +127,7 @@ class FloatingWindow(QMainWindow):
         elif action == "random_color":
             self.shape_controller.random_color()
 
-    ### Speech Events
-    def onSpeechStart(self):
-        print("User is speaking.")
-
-    def onSpeechEnd(self):
-        default_responses = [
-            "Uh huh",
-            "That makes sense",
-            "Hmm",
-            "Hmmm",
-            "Yeah",
-            "Right",
-        ]
-        index = random.randint(0, len(default_responses) - 1)
-        self.text_bubble.update_text(default_responses[index])
-
+    ### Close QThread when application close
     def closeVoiceThread(self):
         if hasattr(self, "voice_thread"):
             self.voice_thread.quit()
