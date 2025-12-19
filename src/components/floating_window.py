@@ -15,7 +15,7 @@ from src.speech.detect_talk import DetectTalk
 
 
 class FloatingWindow(QMainWindow):
-    def __init__(self, audio_files_list=[]):
+    def __init__(self, audio_map={}):
         super().__init__()
 
         ### Remove popup box and the close (X) and minimize (-) icons
@@ -71,14 +71,14 @@ class FloatingWindow(QMainWindow):
         self.option_ui.quitApplication.connect(self.close_application)
         ### Voice
         self.voice_thread = QThread()
-        self.voice = DetectTalk(audio_files_list=audio_files_list)
+        self.voice = DetectTalk(audio_map=audio_map)
         self.voice.moveToThread(self.voice_thread)
         self.voice_thread.started.connect(self.voice.start)
         self.voice.speechEnded.connect(self.text_bubble.update_text)
 
         self.voice_thread.start()
         ### Response Audio list
-        self.audio_files_list = audio_files_list
+        self.audio_map = audio_map
 
         ### Drag and Drop model
         self.drag_pos = None

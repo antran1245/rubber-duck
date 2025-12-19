@@ -1,5 +1,5 @@
 import sys
-import os
+import json
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
 from src.components.floating_window import FloatingWindow
@@ -9,9 +9,10 @@ AUDIO_DIR = Path("src/assets/audio")
 
 def main():
     try:
-        audio_files = list(AUDIO_DIR.glob("*.mp3"))
+        with open(AUDIO_DIR / "audio_map.json", encoding="utf-8") as f:
+            audio_map = json.load(f)
         app = QApplication(sys.argv)
-        win = FloatingWindow(audio_files)
+        win = FloatingWindow(audio_map)
         win.show()
         sys.exit(app.exec())
 

@@ -1,0 +1,26 @@
+{
+  "voice_ai_hmm": {
+    "file": "voice_ai_hmm.mp3",
+    "text": "Hmm"
+  },
+  "voice_ai_hmmm": {
+    "file": "voice_ai_hmmm.mp3",
+    "text": "Hmmm"
+  },
+  "voice_ai_right": {
+    "file": "voice_ai_right.mp3",
+    "text": "Right"
+  },
+  "voice_ai_that_makes_sense": {
+    "file": "voice_ai_that_makes_sense.mp3",
+    "text": "That makes sense"
+  },
+  "voice_ai_uh_huh": {
+    "file": "voice_ai_uh_huh.mp3",
+    "text": "Uh Huh"
+  },
+  "voice_ai_yeah": {
+    "file": "voice_ai_yeah.mp3",
+    "text": "Yeah"
+  }
+}

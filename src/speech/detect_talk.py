@@ -7,7 +7,10 @@ import numpy as np
 import time
 import pygame
 import random
+from pathlib import Path
 from PySide6.QtCore import QObject, Signal
+
+AUDIO_DIR = Path("src/assets/audio")
 
 
 class DetectTalk(QObject):
@@ -19,12 +22,12 @@ class DetectTalk(QObject):
         silence_threshold=0.0007,
         silence_timeout=1.2,
         sample_rate=16000,
-        audio_files_list=[],
+        audio_map={},
     ):
         super().__init__()
         ### Initialize audio playing library
         pygame.mixer.init()
-        self.audio_files_list = audio_files_list
+        self.audio_map = audio_map
 
         self.device = device
         self.silence_threshold = silence_threshold
@@ -66,25 +69,16 @@ class DetectTalk(QObject):
                 if now - self.last_sound_time > self.silence_timeout:
                     self.is_speaking = False
                     self.onSpeechEnd()
-                    self.voiceOnSpeechEnd()
 
     ### Speech Events
     def onSpeechStart(self):
         print("User is speaking.")
 
     def onSpeechEnd(self):
-        default_responses = [
-            "Uh huh",
-            "That makes sense",
-            "Hmm",
-            "Hmmm",
-            "Yeah",
-            "Right",
-        ]
-        index = random.randint(0, len(default_responses) - 1)
-        self.speechEnded.emit(default_responses[index])
-
-    def voiceOnSpeechEnd(self):
-        index = random.randint(0, len(self.audio_files_list) - 1)
-        sound = pygame.mixer.Sound(str(self.audio_files_list[index]))
+        key = random.choice(list(self.audio_map.keys()))
+        entry = self.audio_map[key]
+        mp3 = AUDIO_DIR / entry["file"]
+        text = entry["text"]
+        self.speechEnded.emit(text)
+        sound = pygame.mixer.Sound(str(mp3))
         sound.play()
