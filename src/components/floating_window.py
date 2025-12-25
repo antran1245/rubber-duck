@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, QEvent, QThread
 
 from src.components.shape import ShapeWidget
-from src.components.ui import OptionBox, TextBubble
+from src.components.ui import OptionBox, TextBubble, Menu
 from src.components.ui.option_controller import ShapeController
 from src.speech.detect_talk import DetectTalk
 
@@ -53,9 +53,18 @@ class FloatingWindow(QMainWindow):
         stack_layout.addWidget(textbox_container)
         textbox_container.raise_()  # Always on top of the stack
 
+        ### Menu container
+        menu_container = QWidget()
+        menu_layout = QVBoxLayout(menu_container)
+        layout.addWidget(menu_container)
+        ### Menu
+        self.menu = Menu()
+        menu_layout.addWidget(self.menu, alignment=Qt.AlignRight)
+
         ### Option
         self.option_ui = OptionBox()
-        layout.addWidget(self.option_ui)
+        self.option_ui.setVisible(True)
+        menu_layout.addWidget(self.option_ui)
 
         ### Shape Controller
         self.shape_controller = ShapeController(self.shape_widget)

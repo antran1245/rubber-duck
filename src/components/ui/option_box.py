@@ -1,13 +1,8 @@
-from PySide6.QtWidgets import (
-    QVBoxLayout,
-    QLabel,
-    QPushButton,
-)
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QPushButton, QWidget
 from PySide6.QtCore import Qt, Signal
 
 
-class OptionBox(QOpenGLWidget):
+class OptionBox(QWidget):
     shapeSelected = Signal(str)
     randomColor = Signal()
     quitApplication = Signal()
@@ -20,7 +15,8 @@ class OptionBox(QOpenGLWidget):
         self.setAttribute(Qt.WA_TranslucentBackground)
 
         layout = QVBoxLayout()
-        layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignRight)
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        layout.setSpacing(1)
         label = QLabel("Shape Controls")
         label.setStyleSheet("color: white; font-size: 14px;")
 
@@ -57,13 +53,14 @@ class OptionBox(QOpenGLWidget):
           """
             )
 
-        for element in [label, self.btn_cube, self.btn_sphere]:
+        for element in [
+            label,
+            self.btn_cube,
+            self.btn_sphere,
+            self.btn_random_color,
+            self.btn_quit_application,
+        ]:
             layout.addWidget(element)
-        # layout.addWidget(label)
-        # layout.addWidget(self.btn_cube)
-        # layout.addWidget(self.btn_sphere)
-        layout.addWidget(self.btn_random_color)
-        layout.addWidget(self.btn_quit_application)
         self.setLayout(layout)
 
         self.resize(140, 100)
