@@ -1,14 +1,13 @@
 from PySide6.QtWidgets import QHBoxLayout, QPushButton, QSizePolicy, QWidget
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 
 
 class Menu(QWidget):
+    toggleOptionUi = Signal()
+
     def __init__(self):
         super().__init__()
-
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
-        self.setAttribute(Qt.WA_TranslucentBackground)
 
         self.setSizePolicy(
             # horizontal
@@ -21,7 +20,7 @@ class Menu(QWidget):
 
         self.menu_button = QPushButton()
         self.menu_button.setIcon(QIcon("src/assets/icons/cog.svg"))
-
+        self.menu_button.clicked.connect(self.toggle_option_ui)
         self.menu_button.setStyleSheet(
             """
           QPushButton {
@@ -38,3 +37,6 @@ class Menu(QWidget):
 
         layout.addWidget(self.menu_button)
         self.setLayout(layout)
+
+    def toggle_option_ui(self):
+        self.toggleOptionUi.emit()

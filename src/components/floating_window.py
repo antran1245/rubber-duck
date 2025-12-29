@@ -32,15 +32,16 @@ class FloatingWindow(QMainWindow):
         self.setCentralWidget(container)
 
         ### Stack container
-        self.stack_container = QWidget()
-        stack_layout = QStackedLayout(self.stack_container)
-        stack_layout.setStackingMode(QStackedLayout.StackAll)
-        layout.addWidget(self.stack_container)
+        self.left_container = QWidget()
+        left_layout = QStackedLayout(self.left_container)
+        left_layout.setStackingMode(QStackedLayout.StackAll)
+        left_layout.setAlignment(Qt.AlignTop)
+        layout.addWidget(self.left_container)
 
         ### Shape
         self.shape_widget = ShapeWidget()
-        self.stack_container.installEventFilter(self)
-        stack_layout.addWidget(self.shape_widget)
+        self.left_container.installEventFilter(self)
+        left_layout.addWidget(self.shape_widget)
 
         ### Textbox
         self.text_bubble = TextBubble()
@@ -50,20 +51,22 @@ class FloatingWindow(QMainWindow):
         textbox_container.setLayout(textbox_layout)
         textbox_layout.addStretch()  # Move the textbox to the bottom of the application
         textbox_layout.addWidget(self.text_bubble)
-        stack_layout.addWidget(textbox_container)
+        left_layout.addWidget(textbox_container)
         textbox_container.raise_()  # Always on top of the stack
 
         ### Menu container
-        menu_container = QWidget()
-        menu_layout = QVBoxLayout(menu_container)
-        layout.addWidget(menu_container)
+        self.menu_container = QWidget()
+        menu_layout = QVBoxLayout(self.menu_container)
+        menu_layout.setAlignment(Qt.AlignTop)
+        layout.addWidget(self.menu_container)
         ### Menu
         self.menu = Menu()
-        menu_layout.addWidget(self.menu, alignment=Qt.AlignRight)
+        self.menu.toggleOptionUi.connect(self.toggle_option_ui)
+        menu_layout.addWidget(self.menu, alignment=Qt.AlignLeft)
 
         ### Option
         self.option_ui = OptionBox()
-        self.option_ui.setVisible(True)
+        self.option_ui.setVisible(False)
         menu_layout.addWidget(self.option_ui)
 
         ### Shape Controller
@@ -96,6 +99,8 @@ class FloatingWindow(QMainWindow):
         ### Popup setting
         self.resize(400, 300)
 
+        self.left_container.setFixedWidth(325)
+
     ### Detect keyboard press to end application
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
@@ -109,7 +114,7 @@ class FloatingWindow(QMainWindow):
 
     ### Drag and Drop event
     def eventFilter(self, watched, event):
-        if watched is self.stack_container:
+        if watched is self.left_container:
             if event.type() == QEvent.Enter:
                 self.drag_enabled = True
             elif event.type() == QEvent.Leave:
@@ -141,3 +146,6 @@ class FloatingWindow(QMainWindow):
         if hasattr(self, "voice_thread"):
             self.voice_thread.quit()
             self.voice_thread.wait()
+
+    def toggle_option_ui(self):
+        self.option_ui.setVisible(not self.option_ui.isVisible())
