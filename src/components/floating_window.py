@@ -109,7 +109,7 @@ class FloatingWindow(QMainWindow):
             self.move(self.x() + delta.x(), self.y() + delta.y())
             self.drag_pos = event.globalPosition().toPoint()
 
-    def mouseReleaseEvent(self):
+    def mouseReleaseEvent(self, event):
         self.drag_pos = None
 
     ### Close QThread when application close
