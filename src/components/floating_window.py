@@ -9,9 +9,9 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, QEvent, QThread
 
 from src.components.shape import ShapeWidget
-from src.components.ui import OptionBox, TextBubble, Menu
-from src.components.ui.option_controller import ShapeController
+from src.components.ui import TextBubble
 from src.speech.detect_talk import DetectTalk
+from .menu import Menu
 
 
 class FloatingWindow(QMainWindow):
@@ -54,33 +54,11 @@ class FloatingWindow(QMainWindow):
         left_layout.addWidget(textbox_container)
         textbox_container.raise_()  # Always on top of the stack
 
-        ### Menu container
-        self.menu_container = QWidget()
-        menu_layout = QVBoxLayout(self.menu_container)
-        menu_layout.setAlignment(Qt.AlignTop)
-        layout.addWidget(self.menu_container)
-        ### Menu
-        self.menu = Menu()
-        self.menu.toggleOptionUi.connect(self.toggle_option_ui)
-        menu_layout.addWidget(self.menu, alignment=Qt.AlignLeft)
+        # ### Menu
+        self.menu = Menu(self.shape_widget)
+        self.menu.closeApplication.connect(self.close_application)
+        layout.addWidget(self.menu)
 
-        ### Option
-        self.option_ui = OptionBox()
-        self.option_ui.setVisible(False)
-        menu_layout.addWidget(self.option_ui)
-
-        ### Shape Controller
-        self.shape_controller = ShapeController(self.shape_widget)
-        self.option_ui.shapeSelected.connect(
-            lambda selected_shape: self.handle_shape_controller(
-                "switch_shape", selected_shape
-            )
-        )
-        self.option_ui.randomColor.connect(
-            lambda: self.handle_shape_controller("random_color")
-        )
-
-        self.option_ui.quitApplication.connect(self.close_application)
         ### Voice
         self.voice_thread = QThread()
         self.voice = DetectTalk(audio_map=audio_map)
@@ -131,21 +109,11 @@ class FloatingWindow(QMainWindow):
             self.move(self.x() + delta.x(), self.y() + delta.y())
             self.drag_pos = event.globalPosition().toPoint()
 
-    def mouseReleaseEvent(self, event):
+    def mouseReleaseEvent(self):
         self.drag_pos = None
-
-    ### Handle shape controller
-    def handle_shape_controller(self, action, value=""):
-        if action == "switch_shape":
-            self.shape_controller.switch_shape(value)
-        elif action == "random_color":
-            self.shape_controller.random_color()
 
     ### Close QThread when application close
     def closeVoiceThread(self):
         if hasattr(self, "voice_thread"):
             self.voice_thread.quit()
             self.voice_thread.wait()
-
-    def toggle_option_ui(self):
-        self.option_ui.setVisible(not self.option_ui.isVisible())
