@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import QPushButton
 from PySide6.QtCore import Signal
-from .option_layout import OptionLayout
+from .layout_base import LayoutBase
 
 
-class OptionBox(OptionLayout):
+class OptionUI(LayoutBase):
     shapeSelected = Signal(str)
     randomColor = Signal()
     quitApplication = Signal()

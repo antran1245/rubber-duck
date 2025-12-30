@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import QPushButton
 from PySide6.QtCore import Signal
-from .option_layout import OptionLayout
+from .layout_base import LayoutBase
 
 
-class ModelsOptionButton(OptionLayout):
+class ModelsOptionButton(LayoutBase):
     shapeSelected = Signal(str)
 
     def __init__(self):

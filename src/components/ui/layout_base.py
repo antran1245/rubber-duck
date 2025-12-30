@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
 
 
-class OptionLayout(QWidget):
+class LayoutBase(QWidget):
 
     def __init__(self, title: str, buttons_list: list):
         super().__init__()

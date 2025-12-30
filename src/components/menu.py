@@ -1,15 +1,13 @@
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (
-    QHBoxLayout,
     QVBoxLayout,
     QPushButton,
-    QSizePolicy,
     QWidget,
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 
-from src.components.ui import OptionBox
+from src.components.ui import OptionUI
 from src.components.ui.option_controller import ShapeController
 
 
@@ -18,13 +16,6 @@ class Menu(QWidget):
 
     def __init__(self, shape_widget: QOpenGLWidget):
         super().__init__()
-
-        # self.setSizePolicy(
-        #     # horizontal
-        #     QSizePolicy.Expanding,
-        #     # vertical
-        #     QSizePolicy.Expanding,
-        # )
 
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
@@ -53,7 +44,7 @@ class Menu(QWidget):
         )
 
         ### Option
-        self.option_ui = OptionBox()
+        self.option_ui = OptionUI()
         self.option_ui.setVisible(False)
         layout.addWidget(self.option_ui)
 
