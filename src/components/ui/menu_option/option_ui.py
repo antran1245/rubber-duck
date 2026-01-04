@@ -12,9 +12,7 @@ class OptionUI(LayoutBase):
 
         self.btn_models = QPushButton("Models")
         self.btn_models.clicked.connect(lambda: self.modelsOptionButton.emit())
-        # Random Color
-        self.btn_random_color = QPushButton("Random Color")
-        self.btn_random_color.clicked.connect(lambda: self.randomColor.emit())
+
         # Quit Application
         self.btn_quit_application = QPushButton("Quit Application")
         self.btn_quit_application.clicked.connect(lambda: self.quitApplication.emit())
@@ -22,7 +20,6 @@ class OptionUI(LayoutBase):
         title = "Shape Controls"
         buttons_list = [
             self.btn_models,
-            self.btn_random_color,
             self.btn_quit_application,
         ]
         super().__init__(title=title, buttons_list=buttons_list)

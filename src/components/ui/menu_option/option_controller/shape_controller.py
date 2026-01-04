@@ -24,4 +24,8 @@ class ShapeController:
 
         self.shape_widget.color = (r, g, b)
         # self.shape_widget.update()
-        return f"Shape color changed to RGB ({r}, {g}, {b})."
+        # return f"Shape color changed to RGB ({r}, {g}, {b})."
+        return {"red": r, "green": g, "blue": b}
+
+    def update_color(self, r, g, b):
+        self.shape_widget.color(r, g, b)

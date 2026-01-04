@@ -9,7 +9,6 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 
 from src.components.ui.menu_option import OptionUI, ModelsOption
-from src.components.ui.menu_option.option_controller import ShapeController
 
 
 class Menu(QWidget):
@@ -77,20 +76,9 @@ class Menu(QWidget):
         self.option_ui.setVisible(False)
         layout.addWidget(self.option_ui)
 
-        self.models_option_button = ModelsOption()
+        self.models_option_button = ModelsOption(shape_widget)
         self.models_option_button.setVisible(False)
         layout.addWidget(self.models_option_button)
-
-        ### Shape Controller
-        self.shape_controller = ShapeController(shape_widget)
-        self.models_option_button.shapeSelected.connect(
-            lambda selected_shape: self.handle_shape_controller(
-                "switch_shape", selected_shape
-            )
-        )
-        self.option_ui.randomColor.connect(
-            lambda: self.handle_shape_controller("random_color")
-        )
 
         self.option_ui.modelsOptionButton.connect(self.toggle_models_option_button)
         self.option_ui.quitApplication.connect(lambda: self.closeApplication.emit())
@@ -114,10 +102,3 @@ class Menu(QWidget):
         self.option_ui.setVisible(False)
         self.btn_back.setVisible(True)
         self.models_option_button.setVisible(not self.models_option_button.isVisible())
-
-    ### Handle shape controller
-    def handle_shape_controller(self, action, value=""):
-        if action == "switch_shape":
-            self.shape_controller.switch_shape(value)
-        elif action == "random_color":
-            self.shape_controller.random_color()
