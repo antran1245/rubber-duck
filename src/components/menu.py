@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 
-from src.components.ui.menu_option import OptionUI, ModelsOption
+from src.components.ui.menu_option import OptionUI, ModelsOption, ModelsColorOption
 
 
 class Menu(QWidget):
@@ -57,8 +57,8 @@ class Menu(QWidget):
         self.btn_back = QPushButton()
         self.btn_back.setVisible(False)
         self.btn_back.setIcon(self.icon_back)
-        self.btn_back.clicked.connect(self.toggle_option_ui)
-
+        self.btn_back.clicked.connect(self.back_button)
+        self.back_list = []
         menu_layout.addWidget(
             self.btn_back,
             alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
@@ -87,18 +87,26 @@ class Menu(QWidget):
         self.option_ui.setVisible(False)
         layout.addWidget(self.option_ui)
 
-        self.models_option_button = ModelsOption(shape_widget)
-        self.models_option_button.setVisible(False)
-        layout.addWidget(self.models_option_button)
+        ### Model
+        self.models_option = ModelsOption(shape_widget)
+        self.models_option.setVisible(False)
+        layout.addWidget(self.models_option)
 
-        self.option_ui.modelsOptionButton.connect(self.toggle_models_option_button)
+        ### Model Color
+        self.models_color_option = ModelsColorOption(shape_widget)
+        self.models_color_option.setVisible(False)
+        layout.addWidget(self.models_color_option)
+
+        self.option_ui.modelsOptionButton.connect(self.toggle_models_option)
         self.option_ui.quitApplication.connect(lambda: self.closeApplication.emit())
+
+        self.models_option.modelsColorOption.connect(self.toggle_models_color_option)
 
         layout.addStretch(1)  # Force every widgets to the top
         self.setLayout(layout)
 
-    def toggle_option_ui(self):
-        self.models_option_button.setVisible(False)
+    def toggle_option_ui(self, going_back=False):
+        self.models_option.setVisible(False)
         self.btn_back.setVisible(False)
         self.option_ui.setVisible(not self.option_ui.isVisible())
         self.btn_menu.setVisible(not self.option_ui.isVisible())
@@ -106,15 +114,31 @@ class Menu(QWidget):
 
     def close_all(self):
         self.btn_menu.setVisible(True)
+        self.back_list = []
         for ele in [
             self.btn_back,
             self.btn_close,
             self.option_ui,
-            self.models_option_button,
+            self.models_option,
+            self.models_color_option,
         ]:
             ele.setVisible(False)
 
-    def toggle_models_option_button(self):
+    def back_button(self):
+        if len(self.back_list) != 0:
+            funct = self.back_list.pop()
+            funct(going_back=True)
+
+    def toggle_models_option(self, going_back=False):
+        if not going_back:
+            self.back_list.append(self.toggle_option_ui)
         self.option_ui.setVisible(False)
         self.btn_back.setVisible(True)
-        self.models_option_button.setVisible(not self.models_option_button.isVisible())
+        self.models_option.setVisible(not self.models_option.isVisible())
+        self.models_color_option.setVisible(False)
+
+    def toggle_models_color_option(self, going_back=False):
+        if not going_back:
+            self.back_list.append(self.toggle_models_option)
+        self.models_option.setVisible(False)
+        self.models_color_option.setVisible(not self.models_color_option.isVisible())
