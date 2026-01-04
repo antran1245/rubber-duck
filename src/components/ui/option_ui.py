@@ -4,18 +4,14 @@ from .layout_base import LayoutBase
 
 
 class OptionUI(LayoutBase):
-    shapeSelected = Signal(str)
     randomColor = Signal()
     quitApplication = Signal()
+    modelsOptionButton = Signal()
 
     def __init__(self):
 
-        # Show Cube
-        self.btn_cube = QPushButton("Show Cube")
-        self.btn_cube.clicked.connect(lambda: self.shapeSelected.emit("cube"))
-        # Show Sphere
-        self.btn_sphere = QPushButton("Show Sphere")
-        self.btn_sphere.clicked.connect(lambda: self.shapeSelected.emit("sphere"))
+        self.btn_models = QPushButton("Models")
+        self.btn_models.clicked.connect(lambda: self.modelsOptionButton.emit())
         # Random Color
         self.btn_random_color = QPushButton("Random Color")
         self.btn_random_color.clicked.connect(lambda: self.randomColor.emit())
@@ -25,8 +21,7 @@ class OptionUI(LayoutBase):
 
         title = "Shape Controls"
         buttons_list = [
-            self.btn_cube,
-            self.btn_sphere,
+            self.btn_models,
             self.btn_random_color,
             self.btn_quit_application,
         ]
