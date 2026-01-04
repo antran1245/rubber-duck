@@ -3,7 +3,7 @@ from PySide6.QtCore import Signal
 from .layout_base import LayoutBase
 
 
-class ModelsOptionButton(LayoutBase):
+class ModelsOption(LayoutBase):
     shapeSelected = Signal(str)
 
     def __init__(self):

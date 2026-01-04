@@ -8,8 +8,8 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 
-from src.components.ui import OptionUI, ModelsOptionButton
-from src.components.ui.option_controller import ShapeController
+from src.components.ui.menu_option import OptionUI, ModelsOption
+from src.components.ui.menu_option.option_controller import ShapeController
 
 
 class Menu(QWidget):
@@ -77,7 +77,7 @@ class Menu(QWidget):
         self.option_ui.setVisible(False)
         layout.addWidget(self.option_ui)
 
-        self.models_option_button = ModelsOptionButton()
+        self.models_option_button = ModelsOption()
         self.models_option_button.setVisible(False)
         layout.addWidget(self.models_option_button)
 
