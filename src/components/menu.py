@@ -42,6 +42,17 @@ class Menu(QWidget):
             alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
         )
 
+        ### Close (X) button
+        self.btn_close = QPushButton()
+        self.btn_close.setIcon(self.icon_close)
+        self.btn_close.setVisible(False)
+        self.btn_close.clicked.connect(self.close_all)
+
+        menu_layout.addWidget(
+            self.btn_close,
+            alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
+        )
+
         ### Back button
         self.btn_back = QPushButton()
         self.btn_back.setVisible(False)
@@ -53,7 +64,7 @@ class Menu(QWidget):
             alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
         )
 
-        for btn in [self.btn_back, self.btn_menu]:
+        for btn in [self.btn_back, self.btn_close, self.btn_menu]:
             btn.setStyleSheet(
                 """
           QPushButton {
@@ -87,18 +98,23 @@ class Menu(QWidget):
         self.setLayout(layout)
 
     def toggle_option_ui(self):
-        if not self.btn_menu.isVisible():
-            self.btn_menu.setVisible(True)
         self.models_option_button.setVisible(False)
         self.btn_back.setVisible(False)
         self.option_ui.setVisible(not self.option_ui.isVisible())
-        if self.option_ui.isVisible():
-            self.btn_menu.setIcon(self.icon_close)
-        else:
-            self.btn_menu.setIcon(self.icon_cog)
+        self.btn_menu.setVisible(not self.option_ui.isVisible())
+        self.btn_close.setVisible(self.option_ui.isVisible())
+
+    def close_all(self):
+        self.btn_menu.setVisible(True)
+        for ele in [
+            self.btn_back,
+            self.btn_close,
+            self.option_ui,
+            self.models_option_button,
+        ]:
+            ele.setVisible(False)
 
     def toggle_models_option_button(self):
-        self.btn_menu.setVisible(False)
         self.option_ui.setVisible(False)
         self.btn_back.setVisible(True)
         self.models_option_button.setVisible(not self.models_option_button.isVisible())
