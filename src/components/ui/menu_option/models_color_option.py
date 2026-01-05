@@ -7,22 +7,18 @@ from .layout_base import LayoutBase
 
 
 class ModelsColorOption(LayoutBase):
-    randomColor = Signal()
-    updateColor = Signal(int, int, int)
 
     def __init__(self, shape_widget: QOpenGLWidget):
         # Declare classes
         self.shape_controller = ShapeController(shape_widget)
 
-        self.red = 0
-        self.green = 0
-        self.blue = 0
+        self.red = 1
+        self.green = 1
+        self.blue = 1
 
         # Random Color
         self.btn_random_color = QPushButton("Random Color")
-        self.btn_random_color.clicked.connect(
-            lambda: lambda: self.handle_shape_controller("random_color")
-        )
+        self.btn_random_color.clicked.connect(lambda: self.handle_shape_controller())
 
         title = "Select a Color"
         buttons_list = [self.btn_random_color]
@@ -31,21 +27,35 @@ class ModelsColorOption(LayoutBase):
         # Slider for RGB
         slider_red_label = QLabel("Red")
         self.slider_red = QSlider(Qt.Orientation.Horizontal)
-        self.slider_red.setRange(0, 255)
-        self.slider_red.setSingleStep(1)
-        self.slider_red.valueChanged.connect(self.value_changed, "red")
+        self.slider_red.valueChanged.connect(
+            lambda value: self.value_changed(value, "red")
+        )
 
         slider_green_label = QLabel("Green")
         self.slider_green = QSlider(Qt.Orientation.Horizontal)
-        self.slider_green.setRange(0, 255)
-        self.slider_green.setSingleStep(1)
-        self.slider_green.valueChanged.connect(self.value_changed, "green")
+        self.slider_green.valueChanged.connect(
+            lambda value: self.value_changed(value, "green")
+        )
 
         slider_blue_label = QLabel("Blue")
         self.slider_blue = QSlider(Qt.Orientation.Horizontal)
-        self.slider_blue.setRange(0, 255)
-        self.slider_blue.setSingleStep(1)
-        self.slider_blue.valueChanged.connect(self.value_changed, "blue")
+        self.slider_blue.valueChanged.connect(
+            lambda value: self.value_changed(value, "blue")
+        )
+
+        ### Style and Adding to the layout
+        for slider in [self.slider_red, self.slider_green, self.slider_blue]:
+            slider.setRange(0, 255)
+            slider.setValue(255)
+
+        for label in [slider_red_label, slider_green_label, slider_blue_label]:
+            label.setStyleSheet(
+                """
+                                QLabel {
+                                    color: white;
+                                }
+                                """
+            )
 
         for ele in [
             slider_red_label,
@@ -57,22 +67,23 @@ class ModelsColorOption(LayoutBase):
         ]:
             self.layout.addWidget(ele)
 
+    ### Slider update
     def value_changed(self, value, color):
-        red = value if color == "red" else self.red
-        green = value if color == "green" else self.green
-        blue = value if color == "blue" else self.blue
+        self.red = value / 255 if color == "red" else self.red
+        self.green = value / 255 if color == "green" else self.green
+        self.blue = value / 255 if color == "blue" else self.blue
+        self.update_color_values()
 
-        self.updateColor(red, green, blue)
-        color_dict = {"red": red, "green": green, "blue": blue}
-        self.update_color_values(color_dict)
-
-    def update_color_values(self, color_dict):
-        self.red = color_dict["red"]
-        self.green = color_dict["green"]
-        self.blue = color_dict["blue"]
+    ### Update the shape color
+    def update_color_values(self):
+        self.shape_controller.update_color(self.red, self.green, self.blue)
 
     ### Handle shape controller
-    def handle_shape_controller(self, action, value=""):
-        if action == "random_color":
-            new_color_value = self.shape_controller.random_color()
-            self.update_color_values(new_color_value)
+    def handle_shape_controller(self):
+        new_color_value = self.shape_controller.random_color()
+        self.red = new_color_value["red"]
+        self.green = new_color_value["green"]
+        self.blue = new_color_value["blue"]
+        self.slider_red.setValue(self.red * 255)
+        self.slider_green.setValue(self.green * 255)
+        self.slider_blue.setValue(self.blue * 255)

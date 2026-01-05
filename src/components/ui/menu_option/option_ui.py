@@ -4,7 +4,6 @@ from .layout_base import LayoutBase
 
 
 class OptionUI(LayoutBase):
-    randomColor = Signal()
     quitApplication = Signal()
     modelsOptionButton = Signal()
 
