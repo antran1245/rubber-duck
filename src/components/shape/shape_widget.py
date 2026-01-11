@@ -4,14 +4,16 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 
 from .cube import CubeWidget
+from .sphere import SphereWidget
 from .shape import Shape
 
 
 class ShapeWidget(QOpenGLWidget):
-    def __init__(self):
+    def __init__(self, config):
         super().__init__()
 
-        self.current_shape = CubeWidget()
+        shape = config.model.shape
+        self.current_shape = CubeWidget() if shape == "cube" else SphereWidget()
         self.color = (1.0, 1.0, 1.0)
         self.angle = 0
         self.scale = 1

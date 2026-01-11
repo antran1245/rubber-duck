@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QWidget
 from PySide6.QtGui import QPainter, QColor, QPen, QBrush
 from PySide6.QtCore import Qt
 
-from src.config import get_width
+from src.config import get_window_width
 
 
 class TextBubble(QWidget):
@@ -12,7 +12,7 @@ class TextBubble(QWidget):
         self.bg_color = QColor(255, 255, 255)
         self.outline_color = QColor(30, 30, 30)
 
-        width = get_width()
+        width = get_window_width()
         self.setFixedSize(width * 0.75, 120)
 
     def paintEvent(self, event):

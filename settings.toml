@@ -8,3 +8,7 @@ height = 300
 
 [paths]
 assets = "assets"
+
+[model]
+shape = "cube"
+model = ""

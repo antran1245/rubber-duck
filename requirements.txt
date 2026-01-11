@@ -8,3 +8,4 @@ PySide6_Addons==6.10.1
 PySide6_Essentials==6.10.1
 shiboken6==6.10.1
 sounddevice==0.5.3
+tomli_w==1.2.0

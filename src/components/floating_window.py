@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QEvent, QThread
 
-from src.config import get_height, get_width
+from src.config import get_window_height, get_window_width, get_config
 
 from src.components.shape import ShapeWidget
 from src.components.ui import TextBubble
@@ -26,6 +26,8 @@ class FloatingWindow(QMainWindow):
         ### Make the application transparent.
         self.setAttribute(Qt.WA_TranslucentBackground)
 
+        config = get_config()
+
         ### Main container for the whole application
         container = QWidget()
         ### Layout setting
@@ -41,7 +43,7 @@ class FloatingWindow(QMainWindow):
         layout.addWidget(self.left_container)
 
         ### Shape
-        self.shape_widget = ShapeWidget()
+        self.shape_widget = ShapeWidget(config)
         self.left_container.installEventFilter(self)
         left_layout.addWidget(self.shape_widget)
 
@@ -77,8 +79,8 @@ class FloatingWindow(QMainWindow):
         self.drag_enabled = False
 
         ### Popup setting
-        width = get_width()
-        height = get_height()
+        width = get_window_width()
+        height = get_window_height()
         self.resize(width, height)
 
         self.left_container.setFixedWidth(width * 0.8125)

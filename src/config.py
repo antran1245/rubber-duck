@@ -1,7 +1,14 @@
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
+from src.components.shape import Shape
 import tomllib
+import tomli_w
 import sys
+
+# ----------------
+# Dataclass
+# ----------------
 
 
 @dataclass
@@ -22,15 +29,28 @@ class PathsConfig:
 
 
 @dataclass
+class ModelConfig:
+    shape: Optional[str]
+    model: Optional[str]
+
+
+@dataclass
 class Config:
     app: AppConfig
     window: WindowConfig
     paths: PathsConfig
+    model: ModelConfig
 
 
+# ----------------
+# Global
+# ----------------
 _CONFIG: Config | None = None
 
 
+# ----------------
+# Helpers
+# ----------------
 def get_app_dir() -> Path:
     if getattr(sys, "frozen", False):
         # Running as .exe
@@ -39,39 +59,79 @@ def get_app_dir() -> Path:
     return Path(__file__).parent.parent
 
 
+def ensure_config_loaded():
+    if _CONFIG is None:
+        raise RuntimeError("Config not loaded. Call load_config() first.")
+
+
+def load_raw_data(path: Path) -> dict:
+    with open(path, "rb") as f:
+        return tomllib.load(f)
+
+
+def save_raw_data(path: Path, data: dict):
+    with open(path, "wb") as f:
+        tomli_w.dump(data, f)
+
+
+### File path
+config_path = get_app_dir() / "settings.toml"
+
+
+def update_setting(section: str, key: str, value):
+    data = load_raw_data(config_path)
+    data.setdefault(section, {})[key] = value
+    save_raw_data(config_path, data)
+
+
+# ----------------
+# Loader
+# ----------------
 def load_config() -> Config:
     global _CONFIG
     if _CONFIG is None:
-        config_path = get_app_dir() / "settings.toml"
 
         if not config_path.exists():
             raise RuntimeError(f"Missing settings.toml at {config_path}")
 
-        with open(config_path, "rb") as f:
-            raw = tomllib.load(f)
+        raw = load_raw_data(config_path)
         _CONFIG = Config(
             app=AppConfig(**raw["app"]),
             window=WindowConfig(**raw["window"]),
             paths=PathsConfig(**raw["paths"]),
+            model=ModelConfig(**raw["model"]),
         )
     return _CONFIG
 
 
 def get_config() -> Config:
-    if _CONFIG is None:
-        raise RuntimeError("Config not loaded. Call load_config() first.")
+    ensure_config_loaded()
     return _CONFIG
 
 
-def get_width() -> int:
-    if _CONFIG is None:
-        raise RuntimeError("Config not loaded. Call load_config() first.")
+# ----------------
+# Window
+# ----------------
+def get_window_width() -> int:
+    ensure_config_loaded()
     width = _CONFIG.window.width if _CONFIG.window.width > 400 else 400
     return width
 
 
-def get_height() -> int:
-    if _CONFIG is None:
-        raise RuntimeError("Config not loaded. Call load_config() first.")
+def get_window_height() -> int:
+    ensure_config_loaded()
     height = _CONFIG.window.height if _CONFIG.window.height > 300 else 300
     return height
+
+
+# ----------------
+# Model
+# ----------------
+def set_shape(shape: str):
+    ensure_config_loaded()
+    update_setting("model", "shape", shape)
+
+
+def get_shape() -> str:
+    ensure_config_loaded()
+    return _CONFIG.model.shape
