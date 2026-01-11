@@ -8,6 +8,8 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QEvent, QThread
 
+from src.config import get_height, get_width
+
 from src.components.shape import ShapeWidget
 from src.components.ui import TextBubble
 from src.speech.detect_talk import DetectTalk
@@ -75,9 +77,11 @@ class FloatingWindow(QMainWindow):
         self.drag_enabled = False
 
         ### Popup setting
-        self.resize(400, 300)
+        width = get_width()
+        height = get_height()
+        self.resize(width, height)
 
-        self.left_container.setFixedWidth(325)
+        self.left_container.setFixedWidth(width * 0.8125)
 
     ### Detect keyboard press to end application
     def keyPressEvent(self, event):

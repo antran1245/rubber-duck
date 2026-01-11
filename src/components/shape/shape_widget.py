@@ -14,6 +14,7 @@ class ShapeWidget(QOpenGLWidget):
         self.current_shape = CubeWidget()
         self.color = (1.0, 1.0, 1.0)
         self.angle = 0
+        self.scale = 1
 
         # Update cube every 16ms (~60 FPS)
         self.timer = QTimer(self)
@@ -42,7 +43,7 @@ class ShapeWidget(QOpenGLWidget):
 
         glTranslatef(0, 0, -5)
         glRotatef(self.angle, 1, 1, 0)
-
+        glScale(self.scale, self.scale, self.scale)
         r, g, b = self.color
         glColor3f(r, g, b)
 
@@ -50,4 +51,8 @@ class ShapeWidget(QOpenGLWidget):
 
     def set_shape(self, shape_obj: Shape):
         self.current_shape = shape_obj
+        self.update()
+
+    def set_scale(self, value):
+        self.scale = value
         self.update()

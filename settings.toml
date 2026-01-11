@@ -1,0 +1,10 @@
+[app]
+name = "Rubber Duck"
+debug = false
+
+[window]
+width = 400
+height = 300
+
+[paths]
+assets = "assets"
