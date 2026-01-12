@@ -29,9 +29,19 @@ class PathsConfig:
 
 
 @dataclass
+class RGB:
+    r: float
+    g: float
+    b: float
+
+
+@dataclass
 class ModelConfig:
     shape: Optional[str]
     model: Optional[str]
+    shape_color_r: float
+    shape_color_g: float
+    shape_color_b: float
 
 
 @dataclass
@@ -135,3 +145,19 @@ def set_shape(shape: str):
 def get_shape() -> str:
     ensure_config_loaded()
     return _CONFIG.model.shape
+
+
+def set_shape_color(r, g, b):
+    ensure_config_loaded()
+    update_setting("model", "shape_color_r", float(r))
+    update_setting("model", "shape_color_g", float(g))
+    update_setting("model", "shape_color_b", float(b))
+
+
+def get_shape_color():
+    ensure_config_loaded()
+    return {
+        "r": _CONFIG.model.shape_color_r,
+        "g": _CONFIG.model.shape_color_g,
+        "b": _CONFIG.model.shape_color_b,
+    }

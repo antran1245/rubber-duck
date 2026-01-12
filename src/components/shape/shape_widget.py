@@ -12,9 +12,14 @@ class ShapeWidget(QOpenGLWidget):
     def __init__(self, config):
         super().__init__()
 
-        shape = config.model.shape
-        self.current_shape = CubeWidget() if shape == "cube" else SphereWidget()
-        self.color = (1.0, 1.0, 1.0)
+        config_shape = config.model.shape
+        self.current_shape = CubeWidget() if config_shape == "cube" else SphereWidget()
+        config_color = {
+            "r": config.model.shape_color_r,
+            "g": config.model.shape_color_g,
+            "b": config.model.shape_color_b,
+        }
+        self.color = (config_color["r"], config_color["g"], config_color["b"])
         self.angle = 0
         self.scale = 1
 
