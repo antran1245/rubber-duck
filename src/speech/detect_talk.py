@@ -7,10 +7,12 @@ import numpy as np
 import time
 import pygame
 import random
-from pathlib import Path
-from PySide6.QtCore import QObject, Signal
 
-AUDIO_DIR = Path("src/assets/audio")
+from PySide6.QtCore import QObject, Signal
+from src.utils.resources import resource_path
+
+
+AUDIO_DIR = resource_path("assets/audio")
 
 
 class DetectTalk(QObject):

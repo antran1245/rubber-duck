@@ -9,6 +9,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 
 from src.components.ui.menu_option import OptionUI, ModelsOption, ModelsColorOption
+from src.utils.resources import resource_path
 
 
 class Menu(QWidget):
@@ -18,9 +19,9 @@ class Menu(QWidget):
         super().__init__()
 
         ### Icons
-        self.icon_cog = QIcon("src/assets/icons/cog.svg")
-        self.icon_close = QIcon("src/assets/icons/close.svg")
-        self.icon_back = QIcon("src/assets/icons/back.svg")
+        self.icon_cog = QIcon(str(resource_path("assets/icons/cog.svg")))
+        self.icon_close = QIcon(str(resource_path("assets/icons/close.svg")))
+        self.icon_back = QIcon(str(resource_path("assets/icons/back.svg")))
 
         ### Menu layout
         layout = QVBoxLayout()

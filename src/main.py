@@ -2,10 +2,12 @@ import sys
 import json
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
+
 from src.components.floating_window import FloatingWindow
 from src.config import load_config
+from src.utils.resources import resource_path
 
-AUDIO_DIR = Path("src/assets/audio")
+AUDIO_DIR = resource_path("assets/audio")
 
 
 def main():
