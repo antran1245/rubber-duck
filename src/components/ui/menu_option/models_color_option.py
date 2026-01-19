@@ -1,9 +1,9 @@
+import random
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import QPushButton, QSlider, QLabel
 from PySide6.QtCore import Qt
 
 from src.config import get_shape_color, set_shape_color
-from .option_controller import ShapeController
 from .layout_base import LayoutBase
 
 
@@ -11,7 +11,7 @@ class ModelsColorOption(LayoutBase):
 
     def __init__(self, shape_widget: QOpenGLWidget):
         # Declare classes
-        self.shape_controller = ShapeController(shape_widget)
+        self.shape_widget = shape_widget
 
         color = get_shape_color()
         self.red = color["r"] or 1.0
@@ -73,6 +73,15 @@ class ModelsColorOption(LayoutBase):
         ]:
             self.layout.addWidget(ele)
 
+    def random_color(self):
+        r = random.random()
+        g = random.random()
+        b = random.random()
+        return {"red": r, "green": g, "blue": b}
+
+    def update_color(self, r, g, b):
+        self.shape_widget.color = (r, g, b)
+
     ### Slider update
     def value_changed(self, value, color):
         self.red = value / 255 if color == "red" else self.red
@@ -85,11 +94,11 @@ class ModelsColorOption(LayoutBase):
 
     ### Update the shape color
     def update_color_values(self):
-        self.shape_controller.update_color(self.red, self.green, self.blue)
+        self.update_color(self.red, self.green, self.blue)
 
     ### Handle shape controller
     def handle_shape_controller(self):
-        new_color_value = self.shape_controller.random_color()
+        new_color_value = self.random_color()
         self.red = new_color_value["red"]
         self.green = new_color_value["green"]
         self.blue = new_color_value["blue"]
