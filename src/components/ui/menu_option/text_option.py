@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QPushButton, QSlider, QLabel
+from PySide6.QtWidgets import QPushButton, QSlider, QLabel, QWidget
 from PySide6.QtCore import Qt
 
 from .layout_base import LayoutBase
@@ -6,7 +6,9 @@ from .layout_base import LayoutBase
 
 class TextOption(LayoutBase):
 
-    def __init__(self):
+    def __init__(self, text_bubble: QWidget):
+        self.text_bubble = text_bubble
+
         self.btn_text = QPushButton("Toggle Text")
 
         title = "Text Control"
@@ -15,9 +17,11 @@ class TextOption(LayoutBase):
 
         self.text_size_label = QLabel("Size")
         self.text_size = QSlider(Qt.Orientation.Horizontal)
-        self.text_size.setRange(10, 30)
+        self.text_size.setRange(10, 32)
         self.text_size.setValue(12)
-        self.text_size.valueChanged.connect(self.text_size_changed)
+        self.text_size.valueChanged.connect(
+            lambda value: self.text_bubble.update_text_size(value)
+        )
 
         self.text_size_label.setStyleSheet(
             """
@@ -29,6 +33,3 @@ class TextOption(LayoutBase):
 
         for ele in [self.text_size_label, self.text_size]:
             self.layout.addWidget(ele)
-
-    def text_size_changed(self, size):
-        print("size")

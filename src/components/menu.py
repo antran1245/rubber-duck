@@ -20,7 +20,7 @@ from src.utils.resources import resource_path
 class Menu(QWidget):
     closeApplication = Signal()
 
-    def __init__(self, shape_widget: QOpenGLWidget):
+    def __init__(self, shape_widget: QOpenGLWidget, text_bubble: QWidget):
         super().__init__()
 
         ### Icons
@@ -104,7 +104,7 @@ class Menu(QWidget):
         layout.addWidget(self.models_color_option)
 
         ### Text
-        self.text_option = TextOption()
+        self.text_option = TextOption(text_bubble)
         self.text_option.setVisible(False)
         layout.addWidget(self.text_option)
 

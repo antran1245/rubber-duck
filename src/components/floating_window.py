@@ -59,7 +59,7 @@ class FloatingWindow(QMainWindow):
         textbox_container.raise_()  # Always on top of the stack
 
         # ### Menu
-        self.menu = Menu(self.shape_widget)
+        self.menu = Menu(self.shape_widget, self.text_bubble)
         self.menu.closeApplication.connect(self.close_application)
         layout.addWidget(self.menu)
 
