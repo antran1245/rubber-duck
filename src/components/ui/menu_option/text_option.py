@@ -10,6 +10,7 @@ class TextOption(LayoutBase):
         self.text_bubble = text_bubble
 
         self.btn_text = QPushButton("Toggle Text")
+        self.btn_text.clicked.connect(lambda: self.text_bubble.update_visible())
 
         title = "Text Control"
         buttons_list = [self.btn_text]

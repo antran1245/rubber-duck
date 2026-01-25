@@ -42,3 +42,7 @@ class TextBubble(QWidget):
     def update_text_size(self, size):
         self.font_size = size
         self.update()
+
+    def update_visible(self):
+        self.setVisible(not self.isVisible())
+        self.update()
