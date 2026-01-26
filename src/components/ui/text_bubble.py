@@ -2,15 +2,17 @@ from PySide6.QtWidgets import QWidget
 from PySide6.QtGui import QPainter, QColor, QPen, QBrush, QFont
 from PySide6.QtCore import Qt
 
-from src.config import get_window_width
+from src.config import get_window_width, get_text_size, get_text_visibilty
 
 
 class TextBubble(QWidget):
     def __init__(self, text="Hello!"):
         super().__init__()
+        self.setVisible(get_text_visibilty())
+
         self.text = text
         self.font = "Arial"
-        self.font_size = 12
+        self.font_size = get_text_size() or 12
         self.bg_color = QColor(255, 255, 255)
         self.outline_color = QColor(30, 30, 30)
 
@@ -43,6 +45,6 @@ class TextBubble(QWidget):
         self.font_size = size
         self.update()
 
-    def update_visible(self):
-        self.setVisible(not self.isVisible())
+    def update_visible(self, isVisible):
+        self.setVisible(isVisible)
         self.update()

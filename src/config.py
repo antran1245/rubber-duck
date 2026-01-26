@@ -29,10 +29,9 @@ class PathsConfig:
 
 
 @dataclass
-class RGB:
-    r: float
-    g: float
-    b: float
+class TextConfig:
+    size: int
+    visibility: bool
 
 
 @dataclass
@@ -50,6 +49,7 @@ class Config:
     window: WindowConfig
     paths: PathsConfig
     model: ModelConfig
+    text: TextConfig
 
 
 # ----------------
@@ -110,6 +110,7 @@ def load_config() -> Config:
             window=WindowConfig(**raw["window"]),
             paths=PathsConfig(**raw["paths"]),
             model=ModelConfig(**raw["model"]),
+            text=TextConfig(**raw["text"]),
         )
     return _CONFIG
 
@@ -161,3 +162,24 @@ def get_shape_color():
         "g": _CONFIG.model.shape_color_g,
         "b": _CONFIG.model.shape_color_b,
     }
+
+
+# ----------------
+# Text
+# ----------------
+def set_text_size(size):
+    update_setting("text", "size", size)
+
+
+def get_text_size() -> int:
+    ensure_config_loaded()
+    return _CONFIG.text.size
+
+
+def set_text_visibilty(isVisible):
+    update_setting("text", "visibility", isVisible)
+
+
+def get_text_visibilty() -> bool:
+    ensure_config_loaded()
+    return _CONFIG.text.visibility
