@@ -4,7 +4,7 @@ from PySide6.QtCore import Signal
 
 from src.config import set_shape
 from .layout_base import LayoutBase
-from src.components.shape import CubeWidget, SphereWidget
+from src.components.model.shape import CubeWidget, SphereWidget
 
 
 class ModelsOption(LayoutBase):
@@ -21,7 +21,9 @@ class ModelsOption(LayoutBase):
         # Show Sphere
         self.btn_sphere = QPushButton("Show Sphere")
         self.btn_sphere.clicked.connect(lambda: self.handle_shape_controller("sphere"))
-
+        # Use Model
+        self.btn_model = QPushButton("Upload 3D Model")
+        self.btn_model.clicked.connect(lambda: print("Use Model"))
         # Select Color
         self.btn_color = QPushButton("Color")
         self.btn_color.clicked.connect(lambda: self.modelsColorOption.emit())

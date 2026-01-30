@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
-from src.components.shape import Shape
+from src.components.model.shape import Shape
 import tomllib
 import tomli_w
 import sys

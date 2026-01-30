@@ -10,7 +10,7 @@ from PySide6.QtCore import Qt, QEvent, QThread
 
 from src.config import get_window_height, get_window_width, get_config
 
-from src.components.shape import ShapeWidget
+from src.components.model.shape import ShapeWidget
 from src.components.ui import TextBubble
 from src.speech.detect_talk import DetectTalk
 from .menu import Menu
