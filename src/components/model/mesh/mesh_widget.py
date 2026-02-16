@@ -14,7 +14,6 @@ class MeshWidget(QOpenGLWidget):
         self.rotation = 0
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.animate)
-        self.timer.start(16)
 
     def setModel(self, model):
         self.model = model
@@ -23,6 +22,7 @@ class MeshWidget(QOpenGLWidget):
     def initializeGL(self):
         glEnable(GL_DEPTH_TEST)
         glClearColor(0.12, 0.12, 0.12, 1)
+        self.timer.start(16)
 
     def resizeGL(self, w, h):
         glViewport(0, 0, w, h)
@@ -36,7 +36,7 @@ class MeshWidget(QOpenGLWidget):
         glLoadIdentity()
         gluLookAt(0, 2, 6, 0, 0, 0, 0, 1, 0)
         glRotate(self.rotation, 0, 1, 0)
-        if self.model:
+        if self.model is not None:
             self.model.draw()
 
     def animate(self):

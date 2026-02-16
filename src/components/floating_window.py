@@ -11,6 +11,7 @@ from PySide6.QtCore import Qt, QEvent, QThread
 from src.config import get_window_height, get_window_width, get_config
 
 from src.components.model.shape import ShapeWidget
+from src.components.model.mesh import MeshWidget
 from src.components.ui import TextBubble
 from src.speech.detect_talk import DetectTalk
 from .menu import Menu
@@ -47,6 +48,12 @@ class FloatingWindow(QMainWindow):
         self.left_container.installEventFilter(self)
         left_layout.addWidget(self.shape_widget)
 
+        ### Mesh
+        self.mesh_widget = MeshWidget()
+        self.mesh_widget.setVisible(False)
+        self.left_container.installEventFilter(self)
+        left_layout.addWidget(self.mesh_widget)
+
         ### Textbox
         self.text_bubble = TextBubble()
         ### Textbox container
@@ -59,7 +66,7 @@ class FloatingWindow(QMainWindow):
         textbox_container.raise_()  # Always on top of the stack
 
         # ### Menu
-        self.menu = Menu(self.shape_widget, self.text_bubble)
+        self.menu = Menu(self.shape_widget, self.mesh_widget, self.text_bubble)
         self.menu.closeApplication.connect(self.close_application)
         layout.addWidget(self.menu)
 
