@@ -18,6 +18,16 @@ class Mesh:
         self.faces = np.array(self.mesh.faces, np.uint32)
 
         # print("Has vertex colors:", hasattr(self.mesh.visual, "vertex_colors"))
+        if (
+            hasattr(self.mesh.visual, "vertex_colors")
+            and len(self.mesh.visual.vertex_colors) > 0
+        ):
+
+            colors = self.mesh.visual.vertex_colors
+            self.colors = colors[:, :3] / 255.0
+        else:
+            self.colors = None
+        print(type(self.mesh.visual))
 
     def draw(self):
         if self.vertices is None:
@@ -25,14 +35,19 @@ class Mesh:
 
         glPushMatrix()
 
-        glColor3f(0.3, 0.3, 0.3)
-
         glScalef(self.scale, self.scale, self.scale)
 
         glBegin(GL_TRIANGLES)
 
         for face in self.faces:
             for i in face:
+
+                if self.colors is not None:
+                    c = self.colors[i]
+                    glColor3f(float(c[0]), float(c[1]), float(c[2]))
+                else:
+                    glColor3f(0.8, 0.8, 0.8)
+
                 v = self.vertices[i]
                 glVertex3f(float(v[0]), float(v[1]), float(v[2]))
 
