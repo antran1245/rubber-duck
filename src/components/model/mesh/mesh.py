@@ -17,7 +17,6 @@ class Mesh:
         self.vertices = np.array(self.mesh.vertices, np.float32)
         self.faces = np.array(self.mesh.faces, np.uint32)
 
-        # print("Has vertex colors:", hasattr(self.mesh.visual, "vertex_colors"))
         if (
             hasattr(self.mesh.visual, "vertex_colors")
             and len(self.mesh.visual.vertex_colors) > 0
@@ -27,7 +26,6 @@ class Mesh:
             self.colors = colors[:, :3] / 255.0
         else:
             self.colors = None
-        print(type(self.mesh.visual))
 
     def draw(self):
         if self.vertices is None:

@@ -7,7 +7,7 @@ A tool that utilize the "Rubber Duck" method. This tool will acknowledge when yo
 ## MVP
 
 - [x] Create shapes as models to interact with users.
-- [ ] Use 3D models (rubber duck, etc) to interact with users.
+- [x] Use 3D models (rubber duck, etc) to interact with users.
 - [x] Menu to control the application.
 - [x] Mic interaction with users' chat.
 - [x] Application provide responses to chat.
@@ -37,6 +37,10 @@ model = ""
 shape_color_r = 1.0
 shape_color_g = 1.0
 shape_color_b = 1.0
+
+[text]
+size = 12
+visibility = true
 ```
 
 5. Run the `.exe` file inside the `dist` folder.
